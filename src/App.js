@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter, Navigate } from "react-router-dom";
+import { RouterProvider, createBrowserRouter, Navigate, createHashRouter } from "react-router-dom";
 import Home from "./pages/home/Home";
 import Register from "./pages/forms/Register";
 import Login from "./pages/forms/Login";
@@ -23,7 +23,7 @@ import { useSelector } from "react-redux";
 function App() {
   const { user } = useSelector(state => state.auth);
   
-  let routers = createBrowserRouter([
+  let routers = createHashRouter([
     {
       path: '/', element: <Layout />, children: [
         { index: true, element: <Home /> },
