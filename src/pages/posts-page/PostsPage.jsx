@@ -1,14 +1,27 @@
 import "./posts-page.css";
-import { posts } from "../../dummyData";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PostList from "../../components/posts/PostList";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Pagination from "../../components/pagination/Pagination";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPosts, getPostsCount } from "../../redux/apiCalls/postsApiCall";
 
+const size=3
 const PostsPage = () => {
-  // avoid open component from bottom
+  const{postsCount,posts}=useSelector(state =>state.post);
+  
+  const dispatch=useDispatch();
+  const [currentPage, setCurrentPage] = useState(1);
+  const pages = Math.ceil((postsCount) / (size));
+  
+
   useEffect(() => {
+    dispatch(fetchPosts(currentPage));
     window.scrollTo(0, 0);
+  }, [currentPage]);
+  useEffect(() => {
+    dispatch(getPostsCount());
+   
   }, []);
 
   return (
@@ -17,7 +30,11 @@ const PostsPage = () => {
         <PostList posts={posts} />
         <Sidebar />
       </section>
-      <Pagination />
+      <Pagination 
+      pages={pages} 
+      currentPage={currentPage} 
+      setCurrentPage={setCurrentPage}
+      />
     </>
   );
 };

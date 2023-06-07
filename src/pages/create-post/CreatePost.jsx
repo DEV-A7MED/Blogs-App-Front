@@ -1,9 +1,14 @@
 import "./create-post.css";
-import { useState } from "react";
-import {  toast } from 'react-toastify';
-
+import { useEffect, useState } from "react";
+import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux'
+import { createPost } from "../../redux/apiCalls/postsApiCall";
+import {useNavigate} from "react-router-dom";
+import {RotatingLines} from 'react-loader-spinner'
 const CreatePost = () => {
-  const[isLoading,setIsLoading]=useState(false)
+  const dispatch = useDispatch()
+  const { loading, isPostCreated } = useSelector(state => state.post)
+  
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
@@ -11,24 +16,26 @@ const CreatePost = () => {
 
   // From Submit Handler
   const formSubmitHandler = (e) => {
-    setIsLoading(true);
-
     e.preventDefault();
-
-    if (title.trim() === "")  toast.error("Post Title is required");
-    if (category.trim() === "")  toast.error("Post Category is required");
-    if (description.trim() === "") toast.error("Post Description is required");
-    if (!file)  toast.error("Post Image is required");
-    setIsLoading(false);
-
+    if (title.trim() === "") return toast.error("Post Title is required");
+    if (category.trim() === "")return toast.error("Post Category is required");
+    if (description.trim() === "")return toast.error("Post Description is required");
+    if (!file)return toast.error("Post Image is required");
     const formData = new FormData();
     formData.append("image", file);
     formData.append("title", title);
     formData.append("description", description);
     formData.append("category", category);
-
-    console.log({ title, category, description });
+    dispatch(createPost(formData));
+    
   };
+  const navigate =useNavigate()
+  useEffect(() => {
+    if(isPostCreated){
+      navigate("/")
+    }
+  }, [isPostCreated,navigate])
+  
 
   return (
     <section className="create-post">
@@ -67,8 +74,20 @@ const CreatePost = () => {
           onChange={(e) => setFile(e.target.files[0])}
         />
         <button type="submit" className="create-post-btn">
-        {isLoading?<i class="bi bi-arrow-repeat "></i>:'Create'}
-          
+          {
+            loading ? (
+              <RotatingLines
+                strokeColor="white"
+                strokeWidth="5"
+                animationDuration="0.75"
+                width="30"
+                visible={true}
+              />
+            )
+              
+              :
+                'Create'}
+
         </button>
       </form>
     </section>

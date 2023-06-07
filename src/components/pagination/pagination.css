@@ -32,3 +32,9 @@
 .page.next {
     border-radius: 0 10px 10px 0;
 }
+.active{
+    background-color: var(--gray-color);
+}
+.active:disabled{
+    cursor: not-allowed;
+}
