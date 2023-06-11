@@ -65,7 +65,12 @@
     display: block;
     text-align: center;
 }
-
+.loading-screen-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
 /* Media Queries */
 @media (max-width: 990px) {
     .home-container {

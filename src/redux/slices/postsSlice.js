@@ -24,6 +24,7 @@ const postsSlice=createSlice({
         setLoading(state){
             state.loading= true
         },
+        
         clearLoading(state){
             state.loading= false
         },

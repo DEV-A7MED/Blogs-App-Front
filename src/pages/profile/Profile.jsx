@@ -9,10 +9,12 @@ import { useSelector ,useDispatch} from "react-redux";
 
 import { getUserProfile, updateProfilePhoto } from "../../redux/apiCalls/profileApiCall";
 import { useParams } from "react-router-dom";
+import { ThreeDots } from "react-loader-spinner";
 
 
 const Profile = () => {
-  const{profile}=useSelector(state=>state.profile);
+  const{profile,loading}=useSelector(state=>state.profile);
+
   const dispatch =useDispatch()
   const [updateProfile, setUpdateProfile] = useState(false);
   const [file, setFile] = useState(null);
@@ -53,7 +55,26 @@ const Profile = () => {
   }
 
   return (
-    <section className="profile">
+    <>
+      {
+        loading ?
+        <>
+        <div className="loading-screen-container">
+      <ThreeDots 
+        height="80" 
+        width="80" 
+        radius="9"
+        color="#4fa94d" 
+        ariaLabel="three-dots-loading"
+        wrapperStyle={{}}
+        wrapperClassName="loading-screen"
+        visible={true}
+      />
+      </div>
+        </>
+        :
+        <>
+        <section className="profile">
       <div className="profile-header">
         <div className="profile-image-wrapper">
           <img src={file ? URL.createObjectURL(file) :profile?.profilePhoto.url } alt="" className="profile-image" />
@@ -97,6 +118,10 @@ const Profile = () => {
       {updateProfile && 
         <UpdateProfileModal profile={profile} setUpdateProfile={setUpdateProfile} />}
     </section>
+        </>
+      }
+    </>
+    
   );
 };
 

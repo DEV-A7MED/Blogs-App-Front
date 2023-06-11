@@ -4,13 +4,14 @@ import { profileActions } from "../slices/profileSlice";
 import { authActions } from "../slices/authSlice";
 
 
-// logIn user
+//get user profile
 export function getUserProfile(userId){
     return async(dispatch)=>{
         try {
-        
+            dispatch(profileActions.setLoading())
             const {data}= await requset.get(`/user/getUserProfile/${userId}`);
             dispatch(profileActions.setProfile(data));
+            dispatch(profileActions.clearLoading())
             
         } catch (error) {
             toast.error(error.response.data.Error)

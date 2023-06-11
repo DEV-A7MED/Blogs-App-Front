@@ -8,9 +8,11 @@ import { postsActions } from "../slices/postsSlice";
 export function fetchPosts(pageNumber){
     return async(dispatch)=>{
         try {
+            dispatch(postsActions.setLoading())
             const {data}= await requset.get(`/post?page=${pageNumber}`);
             dispatch(postsActions.setposts(data.posts));
-            
+            dispatch(postsActions.clearLoading())
+
             
         } catch (error) {
             toast.error(error.response.data.Error)

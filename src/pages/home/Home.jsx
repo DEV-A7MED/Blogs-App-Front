@@ -6,16 +6,38 @@ import "./home.css";
 import { useEffect } from "react";
 import {useDispatch,useSelector} from 'react-redux'
 import { fetchPosts } from "../../redux/apiCalls/postsApiCall";
+import  { ThreeDots } from 'react-loader-spinner'
+
 const Home = () => {
   const dispatch = useDispatch()
   const {posts}=useSelector( state => state.post)
+  const { loading } = useSelector(state => state.post)
 
   useEffect(() => {
     dispatch(fetchPosts(1))
+
     window.scrollTo(0,0);
   }, []);
   return (
-    <section className="home">
+    <>
+    {
+      loading? <>
+      <div className="loading-screen-container">
+      <ThreeDots 
+        height="80" 
+        width="80" 
+        radius="9"
+        color="#4fa94d" 
+        ariaLabel="three-dots-loading"
+        wrapperStyle={{}}
+        wrapperClassName="loading-screen"
+        visible={true}
+      />
+      </div>
+      </>
+      :
+      <>
+      <section className="home">
       <div className="home-hearo-header">
         <div className="home-hero-header-layout">
           <h1 className="home-title">Welcome to Blog</h1>
@@ -31,7 +53,11 @@ const Home = () => {
           See All Posts
         </Link>
       </div>
-    </section>
+      </section>
+      </>
+    }
+     </>
+    
   );
 };
 
