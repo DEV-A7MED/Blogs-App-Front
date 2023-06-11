@@ -22,7 +22,6 @@ import { useSelector } from "react-redux";
 
 function App() {
   const { user } = useSelector(state => state.auth);
-  
   let routers = createHashRouter([
     {
       path: '/', element: <Layout />, children: [

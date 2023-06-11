@@ -8,7 +8,7 @@ const postsSlice=createSlice({
         postsCat:[],
         loading:false,
         isPostCreated:false,
-        
+        post:null,
         
     },
     reducers:{
@@ -36,6 +36,15 @@ const postsSlice=createSlice({
             state.isPostCreated= false
 
         },
+        setPost(state,action){
+            state.post=action.payload
+        },
+        setLike(state,action){
+            state.post.likes=action.payload.likes
+        },
+        deletePost(state,action){
+            state.posts=state.posts.filter(p=>p._id !== action.payload)
+        }
 
         
     }

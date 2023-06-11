@@ -1,8 +1,15 @@
 import "./update-post-modal.css";
-import { toast, ToastContainer } from "react-toastify";
-import { useState } from "react";
+import { toast} from "react-toastify";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updatePost } from "../../redux/apiCalls/postsApiCall";
+import { fetchCategories } from "../../redux/apiCalls/categoryApiCall";
 
 const UpdatePostModal = ({ setUpdatePost, post }) => {
+  const dispatch= useDispatch()
+ 
+  const {categories}=useSelector(state=>state.category)
+  
   const [title, setTitle] = useState(post.title);
   const [description, setDescription] = useState(post.description);
   const [category, setCategory] = useState(post.category);
@@ -10,13 +17,17 @@ const UpdatePostModal = ({ setUpdatePost, post }) => {
   // From Submit Handler
   const formSubmitHandler = (e) => {
     e.preventDefault();
-    
-    console.log({ title, description, category });
+    if(title.trim()==="")return toast.error("post title is required");
+    if(category.trim()==="")return toast.error("post category is required");
+    if(description.trim()==="")return toast.error("post description is required");
+    dispatch(updatePost({ title, description, category },post?._id));
+    setUpdatePost(false)
   };
-
+  useEffect(()=>{
+    dispatch(fetchCategories())
+  },[])
   return (
     <div className="update-post">
-      <ToastContainer theme="colored" />
       <form onSubmit={formSubmitHandler} className="update-post-form">
         <abbr title="close">
           <i
@@ -39,9 +50,9 @@ const UpdatePostModal = ({ setUpdatePost, post }) => {
           <option disabled value="">
             Select A Category
           </option>
-          <option value="music">music</option>
-          <option value="travelling">travelling</option>
-          <option value="drinks">drinks</option>
+          {
+            categories.map(category=><option key={category._id} value={category.title}>{category.title}</option>)
+          }
         </select>
         <textarea
           className="update-post-textarea"

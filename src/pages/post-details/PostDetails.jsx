@@ -1,33 +1,40 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import AddComment from "../../components/comments/AddComment";
 import CommentList from "../../components/comments/CommentList";
-import { posts } from "../../dummyData";
+import {useDispatch,useSelector} from "react-redux";
 import "./post-details.css";
 import UpdatePostModal from "./UpdatePostModal";
 import { toast } from "react-toastify";
 import swal from "sweetalert";
+import { deletePost, fetchSinglePost, toggleLikePost, updatePostImage } from "../../redux/apiCalls/postsApiCall";
 
 const PostDetails = () => {
+  const dispatch = useDispatch()
+  const {post}=useSelector(state=>state.post);
+  const {user}=useSelector(state=>state.auth);
   const { id } = useParams();
-  const post = posts.find((p) => p._id === +id);
+  
 
   const [updatePost, setUpdatePost] = useState(false);
   const [file, setFile] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    dispatch(fetchSinglePost(id))
+  }, [id]);
 
   // Update Image Submit Handler
   const updateImageSubmitHandler = (e) => {
     e.preventDefault();
     if(!file) return toast.warning("there is no file!");
-
-    console.log("image uploaded successfully")
+    const formData=new FormData();
+    formData.append("image",file)
+    dispatch(updatePostImage(formData,post?._id))
   }
 
   // Delete Post Handler
+  const navigate= useNavigate()
   const deletePostHandler = () => {
     swal({
       title: "Are you sure?",
@@ -35,13 +42,10 @@ const PostDetails = () => {
       icon: "warning",
       buttons: true,
       dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        swal("post has been deleted!", {
-          icon: "success",
-        });
-      } else {
-        swal("Something went wrong!");
+    }).then((isOk) => {
+      if (isOk) {
+        dispatch(deletePost(post?._id));
+        navigate(`/profile/${user?._id}`);
       }
     });
   };
@@ -49,8 +53,11 @@ const PostDetails = () => {
   return (
     <div className="post-details">
       <div className="post-details-image-wrapper">
-        <img src={file ? URL.createObjectURL(file) : post.image} alt="" className="post-details-image" />
-        <form onSubmit={updateImageSubmitHandler} className="update-post-image-form">
+        <img src={file ? URL.createObjectURL(file) : post?.postPhoto?.url} alt="postPhoto" className="post-details-image" />
+        {
+          user?._id===post?.createdBy?._id &&
+          (
+            <form onSubmit={updateImageSubmitHandler} className="update-post-image-form">
           <label className="update-post-image" htmlFor="file">
             <i className="bi bi-image-fill"></i> select new image
           </label>
@@ -63,41 +70,58 @@ const PostDetails = () => {
           />
           <button type="submit">upload</button>
         </form>
+          )
+        }
       </div>
-      <h1 className="post-details-title">{post.title}</h1>
+      <h1 className="post-details-title">{post?.title}</h1>
       <div className="post-details-user-info">
-        <img src={post.user.image} alt="" className="post-details-user-image" />
+        <img src={post?.createdBy?.profilePhoto?.url} alt="" className="post-details-user-image" />
         <div className="post-details-user">
           <strong>
-            <Link to="/profile/1">{post.user.username}</Link>
+            <Link className="post-details-username" to={`/profile/${post?.createdBy?._id}`}>{post?.createdBy?.userName}</Link>
           </strong>
-          <span>{post.createdAt}</span>
+          <span>{new Date(post?.createdAt).toDateString()}</span>
         </div>
       </div>
       <p className="post-details-description">
-        {post.description} ... Lorem ipsum dolor sit amet consectetur
-        adipisicing elit. Incidunt quis a omnis aut sit earum atque eveniet
-        ratione sint animi illo id accusamus obcaecati dolore voluptatibus
-        aperiam qui, provident fuga? Lorem ipsum dolor sit amet consectetur,
-        adipisicing elit. Quibusdam neque odit soluta? Fugiat, dolores!
-        Laboriosam rem quod, explicabo similique aliquam unde sed vel
-        distinctio, fugiat ab aperiam odio nesciunt quas?
+        {post?.description}
       </p>
       <div className="post-details-icon-wrapper">
         <div>
-          <i className="bi bi-hand-thumbs-up"></i>
-          <small>{post.likes.length} likes</small>
+          {user  && 
+          (
+            <i 
+              onClick={()=>dispatch(toggleLikePost(post?._id))}
+              className={
+                post?.likes?.includes(user?._id)
+                ?"bi bi-hand-thumbs-up-fill"
+                :"bi bi-hand-thumbs-up"
+              }
+              >
+
+            </i>
+          )}
+          <small>{post?.likes?.length} likes</small>
         </div>
-        <div>
+        {
+          user?._id===post?.createdBy?._id &&
+          (
+            <div>
           <i
             onClick={() => setUpdatePost(true)}
             className="bi bi-pencil-square"
           ></i>
           <i onClick={deletePostHandler} className="bi bi-trash-fill"></i>
         </div>
+          )
+        }
       </div>
-      <AddComment />
-      <CommentList />
+      {
+        user &&(
+          <AddComment />
+        )
+      }
+      <CommentList comments={post?.comments}/>
       {updatePost && (
         <UpdatePostModal post={post} setUpdatePost={setUpdatePost} />
       )}
