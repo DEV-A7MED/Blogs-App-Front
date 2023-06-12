@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 
-const PostItem = ({ post }) => {
+const PostItem = ({ post ,userId ,userName}) => {
+
+  const profileLink= userId? `/profile/${userId}`:`/profile/${post?.createdBy?._id}`
 
   return (
     <div className="post-item">
@@ -11,7 +13,11 @@ const PostItem = ({ post }) => {
         <div className="post-item-info">
           <div className="post-item-author">
             <strong>Author: </strong>
-            <Link to={`/profile/${post?.createdBy?._id}`}><span>{post?.createdBy?.userName}</span></Link>
+            <Link to={profileLink}>
+              <span>
+                {userName? userName:post?.createdBy?.userName}
+              </span>
+            </Link>
           </div>
           <div className="post-itme-date">
             {new Date(post?.createdAt).toDateString()}

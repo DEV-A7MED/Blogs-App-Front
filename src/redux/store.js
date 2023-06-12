@@ -1,8 +1,9 @@
-import { configureStore } from "@reduxjs/toolkit";
+import {  configureStore } from "@reduxjs/toolkit";
 import { authReducer } from "./slices/authSlice";
 import { ProfileReducer } from "./slices/profileSlice";
 import { postsReducer } from "./slices/postsSlice";
 import { categoryReducer } from "./slices/categorySlice";
+import { commentReducer } from "./slices/commentSlice";
 
 const store = configureStore({
     reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
         profile:ProfileReducer,
         post:postsReducer,
         category:categoryReducer,
+        comment:commentReducer,
         
 
     }

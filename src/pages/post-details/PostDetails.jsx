@@ -8,10 +8,11 @@ import UpdatePostModal from "./UpdatePostModal";
 import { toast } from "react-toastify";
 import swal from "sweetalert";
 import { deletePost, fetchSinglePost, toggleLikePost, updatePostImage } from "../../redux/apiCalls/postsApiCall";
+import { ThreeDots } from "react-loader-spinner";
 
 const PostDetails = () => {
   const dispatch = useDispatch()
-  const {post}=useSelector(state=>state.post);
+  const {post,loading}=useSelector(state=>state.post);
   const {user}=useSelector(state=>state.auth);
   const { id } = useParams();
   
@@ -51,7 +52,26 @@ const PostDetails = () => {
   };
 
   return (
-    <div className="post-details">
+    <>
+      {
+        loading ? 
+        <>
+        <div className="loading-screen-container">
+      <ThreeDots 
+        height="80" 
+        width="80" 
+        radius="9"
+        color="#4fa94d" 
+        ariaLabel="three-dots-loading"
+        wrapperStyle={{}}
+        wrapperClassName="loading-screen"
+        visible={true}
+      />
+        </div>
+        </>
+        :
+        <>
+        <div className="post-details">
       <div className="post-details-image-wrapper">
         <img src={file ? URL.createObjectURL(file) : post?.postPhoto?.url} alt="postPhoto" className="post-details-image" />
         {
@@ -117,15 +137,21 @@ const PostDetails = () => {
         }
       </div>
       {
-        user &&(
-          <AddComment />
-        )
+        user ? 
+        <AddComment postId={post?._id} />
+        :
+        <p className="post-comment-field">To write a comment , please login first</p>
+        
       }
       <CommentList comments={post?.comments}/>
       {updatePost && (
         <UpdatePostModal post={post} setUpdatePost={setUpdatePost} />
       )}
     </div>
+        </>
+      }
+    </>
+    
   );
 };
 

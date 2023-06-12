@@ -75,8 +75,11 @@ export function createPost(newPost){
 export function fetchSinglePost(postId){
     return async(dispatch)=>{
         try {
+            dispatch(postsActions.setLoading());
             const {data}= await requset.get(`/post/${postId}`);
             dispatch(postsActions.setPost(data.post));
+            dispatch(postsActions.clearLoading());
+
         } catch (error) {
             toast.error(error.response.data.Error)
             console.log(error);

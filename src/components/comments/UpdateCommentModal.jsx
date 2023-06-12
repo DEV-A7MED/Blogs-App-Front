@@ -1,20 +1,23 @@
 import "./update-comment-modal.css";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { updateComment } from "../../redux/apiCalls/commentApiCall";
 
-const UpdateCommentModal = ({ setUpdateComment }) => {
-  const [text, setText] = useState("this is so great");
-
+const UpdateCommentModal = ({ commentForUpdate,setUpdateComment }) => {
+  const [text, setText] = useState(commentForUpdate?.text);
+  const dispatch=useDispatch();
   // From Submit Handler
   const formSubmitHandler = (e) => {
     e.preventDefault();
-
-    console.log({text});
+    if(text.trim()==="") return toast.error("please write something");
+    dispatch(updateComment(commentForUpdate?._id,{text}))
+    setUpdateComment(false)
   };
 
   return (
     <div className="update-comment">
-      <ToastContainer theme="colored" />
+      
       <form onSubmit={formSubmitHandler} className="update-comment-form">
         <abbr title="close">
           <i
