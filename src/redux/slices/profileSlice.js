@@ -5,6 +5,7 @@ const ProfileSlice=createSlice({
     initialState:{
         profile:null,
         loading:false,
+        isProfileDeleted:false
         
     },
     reducers:{
@@ -24,6 +25,15 @@ const ProfileSlice=createSlice({
         clearLoading(state){
             state.loading= false
         },
+        setIsProfileDeleted(state){
+            state.isProfileDeleted=true;
+            state.loading=false
+        },
+        clearIsProfileDeleted(state){
+            state.isProfileDeleted=false;
+        },
+
+
         
     }
 });

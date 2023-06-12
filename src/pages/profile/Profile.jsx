@@ -4,14 +4,15 @@ import UpdateProfileModal from "./UpdateProfileModal";
 import swal from "sweetalert";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
-import { getUserProfile, updateProfilePhoto } from "../../redux/apiCalls/profileApiCall";
-import { useParams } from "react-router-dom";
+import { deleteProfile, getUserProfile, updateProfilePhoto } from "../../redux/apiCalls/profileApiCall";
+import { useNavigate, useParams } from "react-router-dom";
 import { ThreeDots } from "react-loader-spinner";
 import PostItem from "../../components/posts/PostItem";
+import { logoutUser } from "../../redux/apiCalls/authApiCall";
 
 
 const Profile = () => {
-  const { profile, loading } = useSelector(state => state.profile);
+  const { profile, loading,isProfileDeleted } = useSelector(state => state.profile);
   const{user}=useSelector(state=>state.auth);
   const dispatch = useDispatch()
   const [updateProfile, setUpdateProfile] = useState(false);
@@ -21,8 +22,14 @@ const Profile = () => {
   useEffect(() => {
     dispatch(getUserProfile(id))
     window.scrollTo(0, 0);
-  }, [id]);
+  }, [dispatch,id]);
 
+  const navigate=useNavigate();
+  useEffect(()=>{
+    if(isProfileDeleted){
+      navigate('/')
+    }
+  },[navigate,isProfileDeleted])
   // Form Submit Handler
   const formSubmitHandler = (e) => {
     e.preventDefault();
@@ -41,13 +48,10 @@ const Profile = () => {
       icon: "warning",
       buttons: true,
       dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        swal("Account has been deleted!", {
-          icon: "success",
-        });
-      } else {
-        swal("Something went wrong!");
+    }).then((isOk) => {
+      if (isOk) {
+        dispatch(deleteProfile(user?._id));
+        dispatch(logoutUser());
       }
     });
   }
@@ -118,7 +122,7 @@ const Profile = () => {
               <div className="profile-posts-list">
                 <h2 className="profile-posts-list-title">{profile?.userName} Posts</h2>
                 {
-                  profile?.posts.map(post =>
+                  profile?.posts?.map(post =>
                     <PostItem
                       key={post?._id}
                       post={post}
