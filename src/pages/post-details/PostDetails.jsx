@@ -54,7 +54,7 @@ const PostDetails = () => {
   return (
     <>
       {
-        loading ? 
+        !post ? 
         <>
         <div className="loading-screen-container">
       <ThreeDots 
