@@ -16,6 +16,22 @@ export function fetchPosts(pageNumber){
             
         } catch (error) {
             toast.error(error.response.data.Error)
+            dispatch(postsActions.clearLoading())
+
+            console.log(error);
+        }
+    }
+}
+// get all posts
+export function getAllPosts(){
+    return async(dispatch)=>{
+        try {
+            
+            const {data}= await requset.get(`/post`);
+            dispatch(postsActions.setposts(data.posts));
+  
+        } catch (error) {
+            toast.error(error.response.data.Error)
             console.log(error);
         }
     }
@@ -36,7 +52,6 @@ export function getPostsCount(){
 }
 
 // fetch posts category 
-
 export function fetchPostsCategory(category){
     return async(dispatch)=>{
         try {
@@ -82,6 +97,8 @@ export function fetchSinglePost(postId){
 
         } catch (error) {
             toast.error(error.response.data.Error)
+            dispatch(postsActions.clearLoading());
+
             console.log(error);
         }
     }
@@ -147,7 +164,7 @@ export function deletePost(postId){
                     Authorization:"blogs__" + getState().auth.user.token
                 }
             });
-            dispatch(postsActions.deletePost(data.postId));
+            dispatch(postsActions.deletePost(postId));
             toast.success(data.message)
             
         } catch (error) {

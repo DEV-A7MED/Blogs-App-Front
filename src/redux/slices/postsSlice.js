@@ -59,7 +59,8 @@ const postsSlice=createSlice({
             const comment =state.post.comments.find(c=>c._id===action.payload);
             const commentIndex =state.post.comments.indexOf(comment);
             state.post.comments.splice(commentIndex,1);
-        }
+        },
+        
 
         
     }

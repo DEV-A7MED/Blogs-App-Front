@@ -15,6 +15,8 @@ export function getUserProfile(userId){
             
         } catch (error) {
             toast.error(error.response.data.Error)
+            dispatch(profileActions.clearLoading())
+
             console.log(error);
         }
     }
@@ -90,6 +92,47 @@ export function deleteProfile(userId){
             toast.error(error.response.data.Error)
             console.log(error);
             dispatch(profileActions.clearLoading())
+        }
+    }
+}
+// Get users count (only admin )
+export function getUsersCount(){
+    return async(dispatch,getState)=>{
+        try {
+            
+            const {data}= await requset.get(`/user/getUsersCount`,{
+                headers:{
+                    Authorization:"blogs__" + getState().auth.user.token,
+                }
+            });
+            
+            dispatch(profileActions.setUserCount(data.usersCount
+                ));
+            
+            
+        } catch (error) {
+            toast.error(error.response.data.Error)
+            console.log(error);
+            
+        }
+    }
+}
+// Get all users profile
+export function getAllUsers(){
+    return async(dispatch,getState)=>{
+        try {
+            const {data}= await requset.get(`/user/getUsersProfile`,{
+                headers:{
+                    Authorization:"blogs__" + getState().auth.user.token,
+                }
+            });
+            
+            dispatch(profileActions.setProfiles(data));
+            
+        } catch (error) {
+            toast.error(error.response.data.Error)
+            console.log(error);
+            
         }
     }
 }

@@ -165,8 +165,21 @@
 }
 
 @media (max-width: 990px) {
+    .admin-dashboard {
+        display: flex;
+        flex-direction: column;
+        justify-content:center ;
+        align-items: center;
+        
+    }
     .admin-sidebar {
-        display: none;
+        display: flex;
+        flex-direction: column;
+        border-right: none;
+    }
+    .admin-sidebar-link {
+        display: inline-block;
+        margin: 10px;
     }
 
     .add-category {
@@ -178,5 +191,9 @@
 @media (max-width: 520px) {
     .admin-main-card {
         width: 100%;
+    }
+    .admin-sidebar-link {
+        display: block;
+        margin: 10px;
     }
 }

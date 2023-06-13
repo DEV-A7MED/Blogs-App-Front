@@ -97,6 +97,10 @@ tr:hover {
 
 /* Media Queries */
 @media (max-width: 720px) {
+    .table-container {
+        
+        flex-direction: column;
+    }
     .table-wrapper {
         padding: 15px;
     }

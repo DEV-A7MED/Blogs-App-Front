@@ -1,25 +1,33 @@
 import "./admin-table.css";
 import AdminSidebar from "./AdminSidebar";
-import { posts } from "../../dummyData";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import swal from "sweetalert";
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from "react";
+import {  deletePost, getAllPosts } from "../../redux/apiCalls/postsApiCall";
 
 const PostsTable = () => {
+
+  const dispatch=useDispatch();
+  const{posts}=useSelector(state=>state.post)
+
+  useEffect(()=>{
+    dispatch(getAllPosts())
+  },[])
+  const navigate=useNavigate()
    // Delete Post Handler
-   const deletePostHandler = () => {
+   const deletePostHandler = (postId) => {
     swal({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this post!",
       icon: "warning",
       buttons: true,
       dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        swal("Post has been deleted!", {
-          icon: "success",
-        });
-      } else {
-        swal("Something went wrong!");
+    }).then((isOk) => {
+      if (isOk) {
+        dispatch(deletePost(postId));
+        navigate(`/admin-dashboard/posts-table`);
+
       }
     });
   };
@@ -45,11 +53,11 @@ const PostsTable = () => {
                 <td>
                   <div className="table-image">
                     <img
-                      src="/images/user-avatar.png"
-                      alt=""
+                      src={item.createdBy?.profilePhoto?.url}
+                      alt="profilePhoto"
                       className="table-user-image"
                     />
-                    <span className="table-username">{item.user.username}</span>
+                    <span className="table-username">{item.createdBy?.userName}</span>
                   </div>
                 </td>
                 <td>
@@ -60,7 +68,7 @@ const PostsTable = () => {
                     <button>
                       <Link to={`/posts/details/${item._id}`}>View Post</Link>
                     </button>
-                    <button onClick={deletePostHandler}>Delete Post</button>
+                    <button onClick={()=>deletePostHandler(item._id)}>Delete Post</button>
                   </div>
                 </td>
               </tr>
