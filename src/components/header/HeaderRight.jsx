@@ -23,7 +23,7 @@ const HeaderRight = () => {
       <>
         <div className="header-right-user-info">
           <span onClick={()=>setDropDown(prev => !prev)} className="header-right-username">{user.userName}</span>
-          <img src={user.profilePhoto.url} alt="user phto" className="header-right-user-photo"/>
+          <img src={user?.profilePhoto?.url} alt="user phto" className="header-right-user-photo"/>
           {dropDown &&(
             <div className="header-right-dropdown">
             <Link to={`/profile/${user._id}`} className="header-dropdown-item" onClick={()=>setDropDown(false)}>

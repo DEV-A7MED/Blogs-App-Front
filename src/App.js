@@ -1,6 +1,7 @@
 import { RouterProvider, Navigate, createHashRouter } from "react-router-dom";
 import Home from "./pages/home/Home";
 import Register from "./pages/forms/Register";
+import VerifyEmail from "./pages/verify-email/VerifyEmail";
 import Login from "./pages/forms/Login";
 import PostDetails from "./pages/post-details/PostDetails";
 import PostsPage from "./pages/posts-page/PostsPage";
@@ -27,6 +28,7 @@ function App() {
       path: '/', element: <Layout />, children: [
         { index: true, element: <Home /> },
         { path: '/register', element: !user ? <Register /> : <Navigate to='/' /> },
+        { path: '/user/:userId/verify/:token', element: !user ? <VerifyEmail /> : <Navigate to='/' /> },
         { path: '/login', element: !user ? <Login /> : <Navigate to='/' /> },
         { path: '/forgot-password', element: <ForgotPassword /> },
         { path: '/reset-password', element: <ResetPassword /> },

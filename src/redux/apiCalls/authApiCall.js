@@ -38,3 +38,17 @@ export function registerUser(user){
         }
     }
 }
+// verify email
+export function verifyEmail(userId,token){
+    return async(dispatch)=>{
+        try {
+        
+            await requset.get(`/auth/${userId}/verify/${token}`);
+            dispatch(authActions.setIsEmailVerified());
+            
+        } catch (error) {
+            toast.error(error.response.data.Error)
+            console.log(error);
+        }
+    }
+}
