@@ -4,6 +4,7 @@ import { ProfileReducer } from "./slices/profileSlice";
 import { postsReducer } from "./slices/postsSlice";
 import { categoryReducer } from "./slices/categorySlice";
 import { commentReducer } from "./slices/commentSlice";
+import { passwordReducer } from "./slices/passwordSlice";
 
 const store = configureStore({
     reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
         post:postsReducer,
         category:categoryReducer,
         comment:commentReducer,
+        password:passwordReducer
         
 
     }

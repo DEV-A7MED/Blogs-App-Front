@@ -31,7 +31,7 @@ function App() {
         { path: '/user/:userId/verify/:token', element: !user ? <VerifyEmail /> : <Navigate to='/' /> },
         { path: '/login', element: !user ? <Login /> : <Navigate to='/' /> },
         { path: '/forgot-password', element: <ForgotPassword /> },
-        { path: '/reset-password', element: <ResetPassword /> },
+        { path: '/reset-password/:userId/:token', element: <ResetPassword /> },
         { path: '/profile/:id', element: user ? <Profile /> : <Navigate to='/' /> },
         { path: '/posts', element: <PostsPage /> },
         { path: '/posts/create', element: user ? <CreatePost /> : <Navigate to='/' /> },
