@@ -5,10 +5,10 @@ import {toast} from "react-toastify"
 export function fetchCategories(){
     return async(dispatch)=>{
         try {
-        
+            
             const {data}= await requset.get(`/category`);
             dispatch(categoryActions.setCategories(data.categories));
-        
+            
         } catch (error) {
             toast.error(error.response.data.Error)
             console.log(error);
@@ -32,7 +32,6 @@ export function addCategory(newCategory){
         } catch (error) {
             toast.error(error.response.data.Error)
             dispatch(categoryActions.clearLoading())
-
             console.log(error);
         }
     }
@@ -47,7 +46,7 @@ export function deleteCategory(categoryId){
                     Authorization:"blogs__" + getState().auth.user.token
                 }
             });
-            dispatch(categoryActions.addCategory(data.categoryId));
+            dispatch(categoryActions.deleteCategory(categoryId));
             toast.success(data.message)
             
         } catch (error) {
@@ -55,4 +54,4 @@ export function deleteCategory(categoryId){
             console.log(error);
         }
     }
-}
+} 

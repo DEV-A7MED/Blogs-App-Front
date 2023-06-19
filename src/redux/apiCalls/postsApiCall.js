@@ -41,11 +41,11 @@ export function getPostsCount(){
     return async(dispatch)=>{
         try {
             const {data}= await requset.get(`/post/count`);
-            dispatch(postsActions.setpostsCount(data.postsCount));
+            dispatch(postsActions.setpostsCount(data?.postsCount));
             
             
         } catch (error) {
-            toast.error(error.response.data.Error)
+            toast.error(error?.response?.data?.Error)
             console.log(error);
         }
     }

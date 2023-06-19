@@ -8,10 +8,10 @@ import { deleteCategory, fetchCategories } from "../../redux/apiCalls/categoryAp
 const CategoriesTable = () => {
   const dispatch=useDispatch()
   const {categories}=useSelector(state=>state.category);
-
   useEffect(()=>{
     dispatch(fetchCategories())
   },[])
+  
   // Delete Category Handler
   const deleteCategoryHandler = (categoryId) => {
     swal({
@@ -26,6 +26,7 @@ const CategoriesTable = () => {
       }
     });
   };
+  
 
   return (
     <div className="table-container">
@@ -45,7 +46,7 @@ const CategoriesTable = () => {
               <tr key={item._id}>
                 <td>{index+1}</td>
                 <td>
-                  <b>{item?.title}</b>
+                  <b>{item.title}</b>
                 </td>
                 <td>
                   <div className="table-button-group">

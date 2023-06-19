@@ -23,6 +23,7 @@
     width: 100%;
     text-align: left;
     border-collapse: collapse;
+    text-transform: capitalize;
 }
 
 th,
